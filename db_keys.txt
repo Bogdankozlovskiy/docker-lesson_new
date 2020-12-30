@@ -1,0 +1,3 @@
+POSTGRES_PASSWORD=useruser
+POSTGRES_USER=Igor
+POSTGRES_DB=Nikolaev_db
