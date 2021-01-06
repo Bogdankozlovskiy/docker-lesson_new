@@ -12,6 +12,7 @@ services:
     ports:
       - "8000:8000"
     command: sh -c "python3 manage.py migrate & python3 manage.py runserver 0.0.0.0:8000"
+    # command: sh -c "gunicorn book_shop.wsgi:application -b 0.0.0.0:8000 -w 2"
     env_file:
       - db_keys.txt
     depends_on:
@@ -43,3 +44,25 @@ services:
   cache:
     image: redis:latest
     container_name: my_cache
+
+  node:
+    image: node:latest
+    container_name: node_
+    command: sleep 100000
+    # loadtest -n 500 http://web:8000/shop/
+    # 28.8    32    28.5
+    # 15.9
+  
+  celery:
+    build:
+      context: .
+      dockerfile: django_docker_file
+    container_name: celery
+    volumes:
+      - ./src:/src
+    env_file:
+      - db_keys.txt
+    depends_on:
+      - db
+      - cache
+    command: sh -c "celery -A book_shop worker -l INFO -B"

@@ -1,0 +1,50 @@
+{% extends 'main_template.html' %}
+
+{% block main %}
+<a href="{% url 'login' %}">Login</a>
+<a href="{% url 'logout' %}">Logout</a>
+<a href="{% url 'register' %}">Register</a>
+{{ user }}
+<br>
+{% if books.has_previous %}
+<a href="{% url 'the-main-page' %}?page={{ books.previous_page_number }}">prev</a>
+{% endif %}
+{% if books.has_next %}
+<a href="{% url 'the-main-page' %}?page={{ books.next_page_number }}">next</a>
+{% endif %}
+    {% for b in books %}
+        <a href="{% url 'book-detail' slug=b.slug %}"><h1>{{ b.title }}</h1></a>
+        <h2>{{ b.date }}</h2>
+        <h3>{{ b.text }}</h3>
+        <h4>{{ b.authors.all }}</h4>
+        {{ b.rate }}
+        {% for i in range %}
+            {% if b.rate >= i %}
+                <a href="{% url 'add-rate' slug=b.slug rate=i %}">
+                    <span class="fa fa-star checked"></span>
+                </a>
+            {% else %}
+                <a href="{% url 'add-rate' slug=b.slug rate=i %}">
+                    <span class="fa fa-star"></span>
+                </a>
+            {% endif %}
+        {% endfor %}
+        {% if b.is_owner %}
+            <i><input class="btn btn-light" type="button" value="Belarus Lives matter"></i>
+            <a href="{% url 'delete-book' slug=b.slug %}">
+                <i><input class="btn btn-danger" type="button" value="Delete Book"></i>
+            </a>
+            <a href="{% url 'update-book' slug=b.slug %}">
+                <i><input class="btn btn-light" type="button" value="Update Book"></i>
+            </a>
+        {% endif %}
+    {% endfor %}
+
+{% if user.is_authenticated %}
+<form action="{% url 'add-book' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="OK">
+</form>
+{% endif %}
+{% endblock %}

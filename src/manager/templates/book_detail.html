@@ -1,0 +1,30 @@
+{% extends 'main_template.html' %}
+
+
+{% block detail %}
+<h1>{{ book.title }}</h1>
+<h2>{{ book.date }}</h2>
+<h3>{{ book.text }}</h3>
+<h4>{{ book.authors.all }}</h4>
+{% for i in "12345" %}
+    {% if rate < i %}
+        <a href="{% url 'add-rate-location' slug=book.slug rate=i location=1 %}">
+            <span class="fa fa-star"></span>
+        </a>
+    {% else %}
+        <a href="{% url 'add-rate-location' slug=book.slug rate=i location=1 %}">
+            <span class="fa fa-star checked"></span>
+        </a>
+    {% endif %}
+{% endfor %}
+{% for comment in book.comments.all %}
+    <h4>{{ comment.text }}</h4>
+    <h5>{{ comment.date }}</h5>
+    <h6>{{ comment.author }}</h6>
+    <a href="{% url 'add-like-to-comment' id=comment.id %}">
+        <h4>Likes: {{ comment.count_like }}</h4>
+    </a>
+{% endfor %}
+
+{% endblock %}
+

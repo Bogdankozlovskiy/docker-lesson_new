@@ -1,0 +1,9 @@
+{% extends 'main_template.html' %}
+
+{% block update_book %}
+<form action="{% url 'update-book' slug=slug %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="OK">
+</form>
+{% endblock %}
